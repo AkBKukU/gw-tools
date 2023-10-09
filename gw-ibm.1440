@@ -1,9 +1,16 @@
 #!/usr/bin/env bash
 
+# Format: 		IBM 3.5in DSHD 1.44MB 
+# gw diskdef: 		ibm.1440
+# External tools:	mtools
+
+# Get project name
 name="$1"
 
+# Include parent script
 source "./gw-raw" "$name" "source"
 
+# Output file names
 img="$name.img"
 
 
@@ -12,7 +19,7 @@ img="$name.img"
 function decode # 1-Nothing
 {
 	echo "Decoding for IBM 1.44MB"
-	gw convert --format ibm.1440 "$raw" "$img"  2>&1 | tee -a "$timestamp-$pass-$name-decode.log"
+	gw convert --format ibm.1440 "$raw" "$img"  2>&1 | tee -a $log_decode
 }
 
 
@@ -21,10 +28,11 @@ function decode # 1-Nothing
 function extract
 {
 	# Get list of files
-	dir="$(mdir -i $img | tail -n +5 | head -n -3)"
+	mdir -i "$img"  2>&1 | tee -a $log_extract
+	dir="$(mdir -i "$img" | tail -n +5 | head -n -3)"
 
-	# Create destinate
-	mkdir "$name-files"
+	# Create destination
+	mkdir -p "$name-files"
 
 	# Extract each file
 	while IFS= read -r line || [[ -n $line ]]; do

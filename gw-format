@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+# Format: 		Format description
+# gw diskdef: 		diskdef name / custom parameters
+# External tools:	additional software to install
+
+# Get project name
+name="$1"
+
+# Include parent script
+source "./gw-raw" "$name" "source"
+
+# Output file names
+img="$name.img"
+
+
+# Overloaded function from gw-raw
+function decode # 1-Nothing
+{
+	echo "Decoding format goes here"
+	#gw convert --format ibm.1440 "$raw" "$img"  2>&1 | tee -a $log_decode
+}
+
+
+# Overloaded function from gw-raw
+function extract
+{
+	echo "Extract files from [$img] here as a verification step"
+}
+
+
+# Create dir based on name and rip within it
+mkdir "$name"
+cd "$name"
+rip A
+cd ..

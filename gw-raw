@@ -1,11 +1,20 @@
 #!/usr/bin/env bash
 
+
+
+# Setup parameters
 raw_name="$1"
-timestamp="$(date --iso-8601)"
+timestamp="$(date +%Y-%m-%dT%H-%M-%S)"
 default_revs=3
 invalid_revs=8
 revs=$default_revs
 pass=1
+
+# Log file names
+log_rip="$timestamp_$pass_$name_raw.log"
+log_decode="$timestamp_$pass_$name_decode.log"
+log_extract="$timestamp_$pass_$name_extract.log"
+
 
 # Primary rip logic
 # Reads disk into Kryoflux format
@@ -35,11 +44,16 @@ function rip # 1-Drive 2-Tracks
 	echo "Ripping [$raw_name]"
 
 	# Make subdir for flux data
-	mkdir -p "$raw_name/revs-$revs"
+	mkdir -p "$raw_name-raw/revs-$revs"
 
 	# Proceed to rip
-	raw="$raw_name/revs-$revs/track00.0.raw"
-	gw read $drive $tracks --revs=$revs "$raw"  2>&1 | tee -a "$timestamp-$pass-$name-raw.log"
+	raw="$raw_name-raw/revs-$revs/track00.0.raw"
+	if [[ ! -f "$raw" ]]
+	then
+		gw read $drive $tracks --revs=$revs "$raw"  2>&1 | tee -a "$log_rip"
+	else
+		echo "Kryoflux rips found, skipping to decode"
+	fi
 	
 	# Use overloaded decode for verifying data
 	decode
