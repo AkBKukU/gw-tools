@@ -37,7 +37,7 @@ function extract
 
 
 # Create dir based on name and rip within it
-mkdir "$name"
+mkdir -p "$name"
 cd "$name"
 rip A
 cd ..

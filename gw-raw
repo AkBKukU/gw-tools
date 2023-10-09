@@ -11,10 +11,12 @@ revs=$default_revs
 pass=1
 
 # Log file names
-log_rip="$timestamp_$pass_$name_raw.log"
-log_decode="$timestamp_$pass_$name_decode.log"
-log_extract="$timestamp_$pass_$name_extract.log"
+log_rip="$timestamp-$pass-$name-raw.log"
+log_decode="$timestamp-$pass-$name-decode.log"
+log_extract="$timestamp-$pass-$name-extract.log"
 
+# Get script location for custom diskdefs
+diskdefs="$(dirname "$(readlink -f "$0")")/diskdefs.cfg"
 
 # Primary rip logic
 # Reads disk into Kryoflux format

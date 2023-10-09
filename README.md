@@ -45,6 +45,11 @@ Format scripts may also overload the `extract` function to perform post
 processing work to images. This is done after validation and potential
 re-rips. Logging here is optional.
 
+#### Custom Diskdefs
+If a format does not have a matching `gw` diskdef one can be added to the 
+`diskdefs.cfg` file. The `gw-raw` script provides a path to the file in a 
+`$diskdefs` variable by determining where it was run from.
+
 ## Usage
 Just running `gw-ibm.1440 disk-name` as an example is all you need to do 
 depending on the format. This would create Kryoflux raw tracks, a 1.44MB IMG, 
@@ -66,5 +71,5 @@ If you are adding a new format script, you can follow these steps:
 | Disk Type               | Format Script               |
 |-------------------------|-----------------------------|
 |IBM 3.5in DSHD 1.44MB    | `gw-ibm.1440`               |
-
+|Jonos Ltd 3.4in SSDD     | `gw-jonos.35`               |
 
