@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+name="$1"
+
+source "./gw-raw" "$name" "source"
+
+img="$name.img"
+
+
+# Overloaded function from gw-raw
+# Converts Kryoflux raw files to IMG using gw built in format
+function decode # 1-Nothing
+{
+	echo "Decoding for IBM 1.44MB"
+	gw convert --format ibm.1440 "$raw" "$img"  2>&1 | tee -a "$timestamp-$pass-$name-decode.log"
+}
+
+
+# Overloaded function from gw-raw
+# Extracts files from FAT12 filesystem using mtools
+function extract
+{
+	# Get list of files
+	dir="$(mdir -i $img | tail -n +5 | head -n -3)"
+
+	# Create destinate
+	mkdir "$name-files"
+
+	# Extract each file
+	while IFS= read -r line || [[ -n $line ]]; do
+		mcopy -i $img ::"$(echo "$line" | awk '{print $1}').$(echo "$line" | awk '{print $2}')" "$name-files"
+	done < <(printf '%s' "$dir")
+}
+
+
+# Create dir based on name and rip within it
+mkdir "$name"
+cd "$name"
+rip A
+cd ..

@@ -1,0 +1,123 @@
+#!/usr/bin/env bash
+
+raw_name="$1"
+timestamp="$(date --iso-8601)"
+default_revs=3
+invalid_revs=8
+revs=$default_revs
+pass=1
+
+# Primary rip logic
+# Reads disk into Kryoflux format
+# Repeats recursivly one time with more revs if fails verification
+# Take as drive letter and TSPEC
+function rip # 1-Drive 2-Tracks
+{
+	# Check for Drive parameters
+	# I would recommend using A/B over 0/1 because "0" doesn't work for me
+	if [[ "$1" != "" ]]
+	then
+		drive="--drive=$1"
+	else
+		drive=""
+	fi
+
+	# Check for track information
+	# This is the full TSPEC that gw supports, over ripping tracks is 
+	# preferable, but you need to limit to 40 on a DD 360k drive.
+	if [[ "$2" != "" ]]
+	then
+		tracks="--tracks '$2'"
+	else
+		tracks=""
+	fi
+
+	echo "Ripping [$raw_name]"
+
+	# Make subdir for flux data
+	mkdir -p "$raw_name/revs-$revs"
+
+	# Proceed to rip
+	raw="$raw_name/revs-$revs/track00.0.raw"
+	gw read $drive $tracks --revs=$revs "$raw"  2>&1 | tee -a "$timestamp-$pass-$name-raw.log"
+	
+	# Use overloaded decode for verifying data
+	decode
+	# Use local verification based on log
+	decode_verify
+	# Check results to determine action
+	result="$?"
+	if [[ "$result" == "2" ]]
+	then
+		if [[ "$revs" == "3" ]]
+		then
+			revs=$invalid_revs
+			echo "Re-ripping with $revs revs"
+			pass=2
+			rip "$1" "$2"
+		else
+			echo "Already bumped up revs, giving up"
+		fi
+	fi
+	# Extract files from decoded image or reduce revs back
+	if [[ "$revs" == "3" ]]
+	then
+		extract
+	else
+		revs=$default_revs
+	fi
+}
+
+# Use log file from gw to check if the rip was valid
+function decode_verify # 1-Log Name
+{
+	sectors_found="$(cat "$timestamp-$pass-$name-decode.log" | grep Found | awk '{print $2}')"
+	sectors_total="$(cat "$timestamp-$pass-$name-decode.log" | grep Found | awk '{print $5}')"
+
+	echo "Decoded $sectors_found/$sectors_total"
+	if [[ "$sectors_found" != "$sectors_total"  ]]
+	then
+		if [[ "$sectors_found" == "0"  ]]
+		then
+			echo "No sectors found, is the format correct?"
+			return 1
+		else
+			echo "Sector errors found"
+			return 2
+		fi
+	fi
+	
+	return 0
+}
+
+# This function should be overloaded in a format script
+function decode # 1-Nothing
+{
+	echo "No format to decode"
+}
+
+# This function should be overloaded in a format script
+function extract # 1-Nothing
+{
+	echo "No extract process"
+}
+
+
+
+# If this is sourced from another script pass "source" as the second parameter
+# This will disable the plain ripping of kryoflux files only
+if [[ "$2" == "source" ]]
+then
+	return 0
+fi
+
+
+
+echo "Ripping raw data only"
+
+# Create dir based on name and rip within it
+mkdir "$raw_name"
+cd "$raw_name"
+rip A
+cd ..
+
