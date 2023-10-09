@@ -8,7 +8,13 @@
 name="$1"
 
 # Include parent script
-source "./gw-raw" "$name" "source"
+if [[ -f "./gw-raw" ]]
+then
+	parent="./gw-raw"
+else
+	parent="$(which gw-raw)"
+fi
+source "$parent" "$name" "source"
 
 # Output file names
 img="$name.img"

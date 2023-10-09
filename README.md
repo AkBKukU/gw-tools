@@ -50,11 +50,15 @@ Just running `gw-ibm.1440 disk-name` as an example is all you need to do
 depending on the format. This would create Kryoflux raw tracks, a 1.44MB IMG, 
 and extract files using `mtools`.
 
+The format scripts should have a header for sourcing the parent file that will
+work either in the local directory or when the `gw-tools` folder is put in the
+`PATH`.
+
 If you are adding a new format script, you can follow these steps:
 
 1. Rip your unknown disk using `gw-raw $project_name`
 2. Inspect the disk structure using something like `HxC Floppy Emulator`
-3. Create a new format script (copy `gw-format` as a template)
+3. Create a new format script (copy `gw-template` as a template)
 4. Run your new format script using the same project name to have it finish the decoding process.
 
 ## Currently Supported Formats
