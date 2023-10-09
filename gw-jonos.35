@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+
+# Format: 		Jonos Ltd. 3.5in SSDD 70 Track CP/M
+# gw diskdef: 		jonos.35
+# External tools:	cpmtools (https://github.com/lipro-cpm4l/cpmtools)
+
+# Get project name
+name="$1"
+
+# Include parent script
+if [[ -f "./gw-raw" ]]
+then
+	parent="./gw-raw"
+else
+	parent="$(which gw-raw)"
+fi
+source "$parent" "$name" "source"
+
+# Output file names
+img="$name.img"
+
+
+# Overloaded function from gw-raw
+function decode # 1-Nothing
+{
+	echo "Decoding Jonos 3.5in Disk"
+	gw convert --diskdefs $diskdefs --format jonos.35 "$raw" "$img"  2>&1 | tee -a $log_decode
+}
+
+
+# Overloaded function from gw-raw
+# Extracting requires the following custom diskdef for cpmtools in: /etc/cpmtools/diskdefs
+#
+# # Jonos Courier/Escort C2100
+# diskdef jonos35
+#    seclen 512
+#    tracks 70
+#    sectrk 9
+#    blocksize 2048
+#    maxdir 64
+#    skew 0
+#    boottrk 2
+#    os 3
+# end
+function extract
+{
+	echo "Extract files from [$img] here as a verification step"
+	#file "$img"  2>&1 | tee -a $log_extract
+
+	format="jonos35"
+	dest="$name-files"
+
+	# System dir creation
+	mkdir -p "$dest"
+
+	# Get files in copy
+	cpmls -f $format "$img" 2>&1 | tee -a $log_extract
+	cpmfiles=( $(cpmls -f $format "$img") )
+
+	# Extract each file from image
+	for line in "${cpmfiles[@]}"
+	do
+	    if [[ "$line" == "0:" ]]
+	    then
+		continue
+	    fi
+	    echo "Extracting: [$line]"
+	    cpmcp -f $format "$img" "0:$line" "$dest/$line"
+
+	done
+
+}
+
+
+# Create dir based on name and rip within it
+mkdir -p "$name"
+cd "$name"
+rip A
+cd ..
