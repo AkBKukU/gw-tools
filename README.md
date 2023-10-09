@@ -74,4 +74,6 @@ If you are adding a new format script, you can follow these steps:
 |-------------------------|-----------------------------|
 |IBM 3.5in DSHD 1.44MB    | `gw-ibm.1440`               |
 |Jonos Ltd 3.4in SSDD     | `gw-jonos.35`               |
+|HP LIF 33 Track DD       | `gw-hp.lif.33dd`            |
+|HP LIF 77 Track DD       | `gw-hp.lif.77dd`            |
 
