@@ -1,6 +1,8 @@
 # gw-tools
 This is a collection of tools for automating the ripping of floppy disks with
 built in error detection and validation depending on the format of the disk.
+This is made possible with the [Greaseweazle](https://github.com/keirf/greaseweazle)
+project.
 
 ### Why?
 I work with a wide variety of disk types and prefer to validate my disk image
