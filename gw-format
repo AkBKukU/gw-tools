@@ -26,6 +26,7 @@ function decode # 1-Nothing
 function extract
 {
 	echo "Extract files from [$img] here as a verification step"
+	#file "$img"  2>&1 | tee -a $log_extract
 }
 
 

@@ -85,8 +85,14 @@ function rip # 1-Drive 2-Tracks
 # Use log file from gw to check if the rip was valid
 function decode_verify # 1-Log Name
 {
-	sectors_found="$(cat "$timestamp-$pass-$name-decode.log" | grep Found | awk '{print $2}')"
-	sectors_total="$(cat "$timestamp-$pass-$name-decode.log" | grep Found | awk '{print $5}')"
+	# If there is no log just return
+	if [[ ! -f $log_decode ]]
+	then
+		return 0
+	fi
+
+	sectors_found="$(cat "$log_decode" | grep Found | awk '{print $2}')"
+	sectors_total="$(cat "$log_decode" | grep Found | awk '{print $5}')"
 
 	echo "Decoded $sectors_found/$sectors_total"
 	if [[ "$sectors_found" != "$sectors_total"  ]]
