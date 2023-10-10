@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# Format: 		IBM 5.25in SSDD 160KB
-# gw diskdef: 		ibm.160
+# Format: 		IBM 5.25in DSDD 360KB
+# gw diskdef: 		ibm.360
 # External tools:	mtools
 
 # Get project name
@@ -24,8 +24,8 @@ img="$name.img"
 # Converts Kryoflux raw files to IMG using gw built in format
 function decode # 1-Nothing
 {
-	echo "Decoding for IBM 5.25in SSDD 160KB "
-	gw convert --format ibm.160 "$raw" "$img"  2>&1 | tee -a $log_decode
+	echo "Decoding for IBM 5.25in DSDD 360KB "
+	gw convert --format ibm.360 "$raw" "$img"  2>&1 | tee -a $log_decode
 }
 
 

@@ -61,18 +61,20 @@ The format scripts should have a header for sourcing the parent file that will
 work either in the local directory or when the `gw-tools` folder is put in the
 `PATH`.
 
-If you are adding a new format script, you can follow these steps:
+If you are unsure of what a disk is or are adding a new format script, you can 
+follow these steps:
 
 1. Rip your unknown disk using `gw-raw $project_name`
-2. Inspect the disk structure using something like [HxC Floppy Emulator](https://github.com/jfdelnero/HxCFloppyEmulator)
-3. Create a new format script (copy `gw-template` as a template)
-4. Run your new format script using the same project name to have it finish the decoding process.
+2. Inspect the disk structure from generated PNG (If [HxC Floppy Emulator](https://github.com/jfdelnero/HxCFloppyEmulator) is setup)
+3. Find matching or create a new format script (copy `gw-template` for new formats)
+4. Run the correct format script using the same project name to have it finish the decoding process.
 
 ## Currently Supported Formats
 
 | Disk Type               | Format Script               |
 |-------------------------|-----------------------------|
 |IBM 5.25in SSDD 160KB    | `gw-ibm.160`                |
+|IBM 5.25in DSDD 360KB    | `gw-ibm.360`                |
 |IBM 3.5in DSHD 1.44MB    | `gw-ibm.1440`               |
 |Jonos Ltd 3.5in SSDD     | `gw-jonos.35`               |
 |HP LIF 33 Track DD       | `gw-hp.lif.33dd`            |
