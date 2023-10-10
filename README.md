@@ -75,6 +75,7 @@ follow these steps:
 |-------------------------|-----------------------------|
 |IBM 5.25in SSDD 160KB    | `gw-ibm.160`                |
 |IBM 5.25in DSDD 360KB    | `gw-ibm.360`                |
+|IBM 5.25in DSHD 1.2MB    | `gw-ibm.1200`               |
 |IBM 3.5in DSFD 720KB     | `gw-ibm.720`                |
 |IBM 3.5in DSHD 1.44MB    | `gw-ibm.1440`               |
 |IBM 3740 8in CP/M        | `gw-cpm.3740`               |
