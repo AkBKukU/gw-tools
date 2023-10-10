@@ -72,6 +72,7 @@ If you are adding a new format script, you can follow these steps:
 
 | Disk Type               | Format Script               |
 |-------------------------|-----------------------------|
+|IBM 5.25in SSDD 160KB    | `gw-ibm.160`                |
 |IBM 3.5in DSHD 1.44MB    | `gw-ibm.1440`               |
 |Jonos Ltd 3.5in SSDD     | `gw-jonos.35`               |
 |HP LIF 33 Track DD       | `gw-hp.lif.33dd`            |

@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+# Format: 		IBM 5.25in SSDD 160KB
+# gw diskdef: 		ibm.160
+# External tools:	mtools
+
+# Get project name
+name="$1"
+
+# Include parent script
+if [[ -f "./gw-raw" ]]
+then
+	parent="./gw-raw"
+else
+	parent="$(which gw-raw)"
+fi
+source "$parent" "$name" "source"
+
+# Output file names
+img="$name.img"
+
+
+# Overloaded function from gw-raw
+# Converts Kryoflux raw files to IMG using gw built in format
+function decode # 1-Nothing
+{
+	echo "Decoding for IBM 5.25in SSDD 160KB "
+	gw convert --format ibm.160 "$raw" "$img"  2>&1 | tee -a $log_decode
+}
+
+
+# Overloaded function from gw-raw
+# Extracts files from FAT12 filesystem using mtools
+function extract
+{
+	# Get list of files
+	mdir -i "$img"  2>&1 | tee -a $log_extract
+	dir="$(mdir -i "$img" | tail -n +5 | head -n -3)"
+
+	# Create destination
+	mkdir -p "$name-files"
+
+	# Extract each file
+	while IFS= read -r line || [[ -n $line ]]; do
+		mcopy -i $img ::"$(echo "$line" | awk '{print $1}').$(echo "$line" | awk '{print $2}')" "$name-files"
+	done < <(printf '%s' "$dir")
+}
+
+
+# Create dir based on name and rip within it
+mkdir -p "$name"
+cd "$name"
+rip A
+cd ..
