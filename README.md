@@ -76,4 +76,5 @@ If you are adding a new format script, you can follow these steps:
 |Jonos Ltd 3.5in SSDD     | `gw-jonos.35`               |
 |HP LIF 33 Track DD       | `gw-hp.lif.33dd`            |
 |HP LIF 77 Track DD       | `gw-hp.lif.77dd`            |
+|HP LIF 77 Track HD       | `gw-hp.lif.77hd`            |
 
