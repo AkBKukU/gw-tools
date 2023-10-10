@@ -124,16 +124,16 @@ function map
 		echo "Put hxcfe in your path to enable disk flux map images"
 		return 1
 	fi
-	if [[ -f "$raw_name-r$revs".png ]]
+	if [[ -f "$raw_name-raw$revs".png ]]
 	then
 		echo "Image exists"
 		return 0
 	fi
 
-	hxcfe -script:"$hxc" -finput:"$raw" -foutput:"$raw_name-r$revs".bmp -conv:BMP_DISK_IMAGE
+	hxcfe -script:"$hxc" -finput:"$raw" -foutput:"$raw_name-raw$revs".bmp -conv:BMP_DISK_IMAGE
 
-	convert "$raw_name-r$revs".bmp "$raw_name-r$revs".png
-	rm "$raw_name-r$revs".bmp
+	convert "$raw_name-raw$revs".bmp "$raw_name-raw$revs".png
+	rm "$raw_name-raw$revs".bmp
 }
 
 # This function should be overloaded in a format script
