@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+
+# Format: 		IBM 3740 8in CP/M
+# gw diskdef: 		ibm.3740
+# External tools:	cpmtools (https://github.com/lipro-cpm4l/cpmtools)
+
+# Get project name
+name="$1"
+
+# Include parent script
+if [[ -f "./gw-raw" ]]
+then
+	parent="./gw-raw"
+else
+	parent="$(which gw-raw)"
+fi
+source "$parent" "$name" "source"
+
+# Output file names
+img="$name.img"
+
+
+# Overloaded function from gw-raw
+function decode # 1-Nothing
+{
+	echo "Decoding IBM 3740 compatible CP/M 2.2 disk"
+	gw convert --diskdefs $diskdefs --format ibm.3740 "$raw" "$img"  2>&1 | tee -a $log_decode
+}
+
+
+# Overloaded function from gw-raw
+function extract # 1-Nothing
+{
+	echo "Extract files from [$img] here as a verification step"
+	#file "$img"  2>&1 | tee -a $log_extract
+
+	format="ibm-3740"
+	dest="$name-files"
+
+	# System dir creation
+	mkdir -p "$dest"
+
+	# Get files in copy
+	cpmls -f $format "$img" 2>&1 | tee -a $log_extract
+	cpmfiles=( $(cpmls -f $format "$img") )
+
+	# Extract each file from image
+	for line in "${cpmfiles[@]}"
+	do
+	    if [[ "$line" == "0:" ]]
+	    then
+		continue
+	    fi
+	    echo "Extracting: [$line]"
+	    cpmcp -f $format "$img" "0:$line" "$dest/$line"
+
+	done
+
+}
+
+
+# Create dir based on name and rip within it
+mkdir -p "$name"
+cd "$name"
+rip A
+cd ..

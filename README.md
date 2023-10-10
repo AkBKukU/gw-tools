@@ -77,6 +77,7 @@ follow these steps:
 |IBM 5.25in DSDD 360KB    | `gw-ibm.360`                |
 |IBM 3.5in DSFD 720KB     | `gw-ibm.720`                |
 |IBM 3.5in DSHD 1.44MB    | `gw-ibm.1440`               |
+|IBM 3740 8in CP/M        | `gw-cpm.3740`               |
 |Jonos Ltd 3.5in SSDD     | `gw-jonos.35`               |
 |HP LIF 33 Track DD       | `gw-hp.lif.33dd`            |
 |HP LIF 77 Track DD       | `gw-hp.lif.77dd`            |
