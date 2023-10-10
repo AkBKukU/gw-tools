@@ -64,10 +64,22 @@ work either in the local directory or when the `gw-tools` folder is put in the
 If you are unsure of what a disk is or are adding a new format script, you can 
 follow these steps:
 
-1. Rip your unknown disk using `gw-raw $project_name`
+1. Rip your unknown disk using `gw-raw $project_name` (using appropriate "raw" drive type)
 2. Inspect the disk structure from generated PNG (If [HxC Floppy Emulator](https://github.com/jfdelnero/HxCFloppyEmulator) is setup)
 3. Find matching or create a new format script (copy `gw-template` for new formats)
 4. Run the correct format script using the same project name to have it finish the decoding process.
+
+## Raw Drive Types
+
+| Drive Type              | Script                      |
+|-------------------------|-----------------------------|
+|80 track double sided    | `gw-raw`                    |
+|40 track double sided    | `gw-raw.40`                 |
+|80 track single sided    | `gw-raw.80ss`               |
+
+
+*Note: As a rule of thumb I always rip single sided disks as double sided if I 
+have a double sided drive.*
 
 ## Currently Supported Formats
 

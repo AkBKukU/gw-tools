@@ -50,5 +50,6 @@ function extract
 # Create dir based on name and rip within it
 mkdir -p "$name"
 cd "$name"
+# Technically this is a single sided format, but will likely only ever be ripped in a double sided drive
 rip B "c=0-39"
 cd ..

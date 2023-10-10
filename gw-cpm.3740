@@ -62,5 +62,5 @@ function extract # 1-Nothing
 # Create dir based on name and rip within it
 mkdir -p "$name"
 cd "$name"
-rip A
+rip A "h=0"
 cd ..

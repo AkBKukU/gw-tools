@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# Format: 		Raw rip alias for 40 track drives
+
+# Get project name
+name="$1"
+
+# Include parent script
+if [[ -f "./gw-raw" ]]
+then
+	parent="./gw-raw"
+else
+	parent="$(which gw-raw)"
+fi
+source "$parent" "$name" "source"
+
+
+# Create dir based on name and rip within it
+mkdir -p "$name"
+cd "$name"
+rip B "c=0-39"
+cd ..
