@@ -15,8 +15,9 @@ log_rip="$timestamp-$pass-$name-raw.log"
 log_decode="$timestamp-$pass-$name-decode.log"
 log_extract="$timestamp-$pass-$name-extract.log"
 
-# Get script location for custom diskdefs
+# Get script location for custom configs
 diskdefs="$(dirname "$(readlink -f "$0")")/diskdefs.cfg"
+hxc="$(dirname "$(readlink -f "$0")")/config.script"
 
 # Primary rip logic
 # Reads disk into Kryoflux format
@@ -58,6 +59,8 @@ function rip # 1-Drive 2-Tracks
 		echo "Kryoflux rips found, skipping to decode"
 	fi
 	
+	# Generate image of flux
+	map
 	# Use overloaded decode for verifying data
 	decode
 	# Use local verification based on log
@@ -111,6 +114,26 @@ function decode_verify # 1-Log Name
 	fi
 	
 	return 0
+}
+
+# Creates an image of the sector map using HxC Floppy tools
+function map
+{
+	if [[ "$(which hxcfe)" == "" ]]
+	then
+		echo "Put hxcfe in your path to enable disk flux map images"
+		return 1
+	fi
+	if [[ -f "$raw_name-r$revs".png ]]
+	then
+		echo "Image exists"
+		return 0
+	fi
+
+	hxcfe -script:"$hxc" -finput:"$raw" -foutput:"$raw_name-r$revs".bmp -conv:BMP_DISK_IMAGE
+
+	convert "$raw_name-r$revs".bmp "$raw_name-r$revs".png
+	rm "$raw_name-r$revs".bmp
 }
 
 # This function should be overloaded in a format script
