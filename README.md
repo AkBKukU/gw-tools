@@ -64,7 +64,7 @@ work either in the local directory or when the `gw-tools` folder is put in the
 If you are adding a new format script, you can follow these steps:
 
 1. Rip your unknown disk using `gw-raw $project_name`
-2. Inspect the disk structure using something like `HxC Floppy Emulator`
+2. Inspect the disk structure using something like [HxC Floppy Emulator](https://github.com/jfdelnero/HxCFloppyEmulator)
 3. Create a new format script (copy `gw-template` as a template)
 4. Run your new format script using the same project name to have it finish the decoding process.
 
@@ -73,7 +73,7 @@ If you are adding a new format script, you can follow these steps:
 | Disk Type               | Format Script               |
 |-------------------------|-----------------------------|
 |IBM 3.5in DSHD 1.44MB    | `gw-ibm.1440`               |
-|Jonos Ltd 3.4in SSDD     | `gw-jonos.35`               |
+|Jonos Ltd 3.5in SSDD     | `gw-jonos.35`               |
 |HP LIF 33 Track DD       | `gw-hp.lif.33dd`            |
 |HP LIF 77 Track DD       | `gw-hp.lif.77dd`            |
 
