@@ -57,6 +57,10 @@ function extract # 1-Nothing
 	# Get files in copy
 	cpmls -f $format "$img" 2>&1 | tee -a $log_extract
 	cpmfiles=( $(cpmls -f $format "$img") )
+	if [[ "$(cpmls -f $format "$img" 2>&1 | grep "/")" != "" ]]
+	then
+		echo "CP/M files with '/' detected, replacing with '_'" 2>&1 | tee -a $log_extract
+	fi
 
 	# Extract each file from image
 	for line in "${cpmfiles[@]}"
@@ -66,10 +70,9 @@ function extract # 1-Nothing
 		continue
 	    fi
 	    echo "Extracting: [$line]"
-	    cpmcp -f $format "$img" "0:$line" "$dest/$line"
+	    cpmcp -f $format "$img" "0:$line" "$dest/$(echo "$line" | sed 's|/|_|')"
 
 	done
-
 }
 
 
