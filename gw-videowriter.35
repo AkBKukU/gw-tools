@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+# Format: 		Magnavox VideoWriter 3.5in Single Sided
+# gw diskdef: 		maganavox.videowriter
+
+# Get project name
+name="$1"
+
+# Include parent script
+if [[ -f "./gw-raw" ]]
+then
+	parent="./gw-raw"
+else
+	parent="$(which gw-raw)"
+fi
+source "$parent" "$name" "source"
+
+# Output file names
+img="$name.img"
+
+
+# Overloaded function from gw-raw
+function decode # 1-Nothing
+{
+	echo "Decoding VideoWriter 3.5in Disk"
+	gw convert --diskdefs $diskdefs --format maganavox.videowriter "$raw" "$img"  2>&1 | tee -a $log_decode
+}
+
+
+
+
+
+# Create dir based on name and rip within it
+mkdir -p "$name"
+cd "$name"
+rip A
+cd ..

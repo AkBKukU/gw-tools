@@ -18,5 +18,5 @@ source "$parent" "$name" "source"
 # Create dir based on name and rip within it
 mkdir -p "$name"
 cd "$name"
-rip B "c=0-39"
+rip B "c=0-39:h=0-1"
 cd ..

@@ -39,7 +39,7 @@ function rip # 1-Drive 2-Tracks
 	# preferable, but you need to limit to 40 on a DD 360k drive.
 	if [[ "$2" != "" ]]
 	then
-		tracks="--tracks '$2'"
+		tracks="--tracks $2"
 	else
 		tracks=""
 	fi
