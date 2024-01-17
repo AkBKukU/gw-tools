@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+
+# Format: 		HP LIF 79 Track Double Density
+# gw diskdef: 		hp.lif.1651b
+# External tools:	hpdir (https://www.hp9845.net/9845/projects/hpdir/)
+
+# Get project name
+name="$1"
+
+# Include parent script
+if [[ -f "./gw-raw" ]]
+then
+	parent="./gw-raw"
+else
+	parent="$(which gw-raw)"
+fi
+source "$parent" "$name" "source"
+
+# Output file names
+img="$name.img"
+
+
+# Overloaded function from gw-raw
+function decode # 1-Nothing
+{
+	echo "Decoding HP LIF 79 Track Double Density"
+	gw convert --diskdefs $diskdefs --format hp.lif.1651b "$raw" "$img"  2>&1 | tee -a $log_decode
+}
+
+
+# Overloaded function from gw-raw
+function extract
+{
+	echo "Extract files from [$img] here as a verification step"
+	#file "$img"  2>&1 | tee -a $log_extract
+
+	hpdir -list "$img" > "hpdir-list.txt"
+	hpdir -info "$img" > "hpdir-info.txt"
+	if [[ $? == 0 ]]
+	then
+		fcount="1"
+		mkdir -p "$img-files"
+		cd "$img-files"
+
+		for file in $(cat "../hpdir-list.txt" | grep -Ev 'VOLUME|.img|bytes free|REC/FILE' | awk '{print $1}')
+		do
+			echo "LIF Extract: [$img]"
+			hpdir -extract "../$img" $file -y
+			fcount="$(expr $fcount + 1)"
+		done
+
+		cd ../..
+	fi
+}
+
+
+# Create dir based on name and rip within it
+mkdir -p "$name"
+cd "$name"
+rip A "c=0-79"
+cd ..
