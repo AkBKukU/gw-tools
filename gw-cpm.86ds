@@ -30,18 +30,19 @@ function decode # 1-Nothing
 
 # Overloaded function from gw-rawo
 # Need custom cpmtools disk diskdef
-# # CompuPro CPM/86?
-# diskdef comp86
-#   seclen 1024
-#   tracks 70
-#   sectrk 8
-#   blocksize 1024
-#   maxdir 64
-#   skew 3
-#   offset 11520
-#   boottrk 0
-#   os 2.2
-# end
+
+# CompuPro CPM/86?
+cpm_diskdef="diskdef comp86
+  seclen 1024
+  tracks 70
+  sectrk 8
+  blocksize 1024
+  maxdir 64
+  skew 3
+  offset 11520
+  boottrk 0
+  os 2.2
+end"
 
 function extract # 1-Nothing
 {
@@ -55,9 +56,9 @@ function extract # 1-Nothing
 	mkdir -p "$dest"
 
 	# Get files in copy
-	cpmls -f $format "$img" 2>&1 | tee -a $log_extract
-	cpmfiles=( $(cpmls -f $format "$img") )
-	if [[ "$(cpmls -f $format "$img" 2>&1 | grep "/")" != "" ]]
+	cpmls -f "$format" "$img" 2>&1 | tee -a $log_extract
+	cpmfiles=( $(cpmls -f "$format" "$img") )
+	if [[ "$(cpmls -f "$format" "$img" 2>&1 | grep "/")" != "" ]]
 	then
 		echo "CP/M files with '/' detected, replacing with '_'" 2>&1 | tee -a $log_extract
 	fi
@@ -70,7 +71,7 @@ function extract # 1-Nothing
 		continue
 	    fi
 	    echo "Extracting: [$line]"
-	    cpmcp -f $format "$img" "0:$line" "$dest/$(echo "$line" | sed 's|/|_|')"
+	    cpmcp -f "$format" "$img" "0:$line" "$dest/$(echo "$line" | sed 's|/|_|')"
 
 	done
 }

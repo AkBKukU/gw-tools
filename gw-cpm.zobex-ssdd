@@ -30,34 +30,35 @@ function decode # 1-Nothing
 
 # Overloaded function from gw-raw
 # Need custom cpmtools disk diskdef
-# # ZOBEX DD-FDC controller, SSDD media
-# # per CP/M V2.2 CBIOS for ZOBEX DD-FDC controller (30-Sep-81)
-# diskdef zobex-ssdd
-#   seclen 512
-#   tracks 77
-#   sectrk 16
-#   maxdir 128
-#   blocksize 2048
-#   skew 0
-#   boottrk 1
-#   os 2.2
-# end
+
+# ZOBEX DD-FDC controller, SSDD media
+# per CP/M V2.2 CBIOS for ZOBEX DD-FDC controller (30-Sep-81)
+cpm_diskdef="diskdef zobex-ssdd
+  seclen 512
+  tracks 77
+  sectrk 16
+  maxdir 128
+  blocksize 2048
+  skew 0
+  boottrk 1
+  os 2.2
+end"
 
 function extract # 1-Nothing
 {
 	echo "Extract files from [$img] here as a verification step"
 	#file "$img"  2>&1 | tee -a $log_extract
 
-	format="zobex-ssdd"
+	format="$cpm_diskdef"
 	dest="$name-files"
 
 	# System dir creation
 	mkdir -p "$dest"
 
 	# Get files in copy
-	cpmls -f $format "$img" 2>&1 | tee -a $log_extract
-	cpmfiles=( $(cpmls -f $format "$img") )
-	if [[ "$(cpmls -f $format "$img" 2>&1 | grep "/")" != "" ]]
+	cpmls -f "$format" "$img" 2>&1 | tee -a $log_extract
+	cpmfiles=( $(cpmls -f "$format" "$img") )
+	if [[ "$(cpmls -f "$format" "$img" 2>&1 | grep "/")" != "" ]]
 	then
 		echo "CP/M files with '/' detected, replacing with '_'" 2>&1 | tee -a $log_extract
 	fi
@@ -70,7 +71,7 @@ function extract # 1-Nothing
 		continue
 	    fi
 	    echo "Extracting: [$line]"
-	    cpmcp -f $format "$img" "0:$line" "$dest/$(echo "$line" | sed 's|/|_|')"
+	    cpmcp -f "$format" "$img" "0:$line" "$dest/$(echo "$line" | sed 's|/|_|')"
 
 	done
 }
