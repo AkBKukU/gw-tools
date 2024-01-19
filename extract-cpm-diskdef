@@ -1,0 +1,35 @@
+#!/bin/bash
+
+set -ue	# report unset variables and unexpected error exit states
+
+# does the user need help?  if so, display blurb and go no further
+case "${1:---help}"
+in
+	--help | -h )
+		echo "Usage: $0 filename..."
+		echo ""
+		echo "Extracts custom cpmtools diskdefs from these scripts, in a format suitable"
+		echo "for including in /usr/local/share/diskdefs, and prints them to stdout."
+		echo ""
+		exit
+		;;
+esac
+
+# we need to run the supplied filenames through our pipeline individually
+for filename in "$@"
+do
+	# this ed command breaks down as follows:
+	#    g                  apply command globally - suppresses errors if no matches
+	#    /^cpm_diskdef=/    find first line starting 'cpm_diskdef='
+	#    ;?^$?              find first empty line before the one we just found
+	#    +1                 ... and then select the line after it
+	#    ;/^end/            ... and now select the next line starting 'end'
+	#    p                  finally, print the block between the last two selections
+	#
+	# we then pipe the selected block of text through sed to trim off the variable bits
+	# which should leave us with the diskdef block we want!
+
+	echo 'g/^cpm_diskdef=/;?^$?+1;/^end/p' |
+		ed -s - "$filename" |
+		sed -e 's/^cpm_diskdef="//' -e 's/^end"/end\n/' -e 's/^# #/#/'
+done
