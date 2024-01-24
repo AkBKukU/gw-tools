@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+# Format: 		Xerox Memorywriter 5.25in Single Sided
+# gw diskdef: 		xerox.memwrite
+
+# Get project name
+name="$1"
+
+# Include parent script
+if [[ -f "./gw-raw" ]]
+then
+	parent="./gw-raw"
+else
+	parent="$(which gw-raw)"
+fi
+source "$parent" "$name" "source"
+
+# Output file names
+img="$name.img"
+
+
+# Overloaded function from gw-raw
+function decode # 1-Nothing
+{
+	echo "Decoding Memorywriter 5.25in 3.5in Disk"
+	gw convert --diskdefs $diskdefs --format xerox.memwrite "$raw" "$img"  2>&1 | tee -a $log_decode
+}
+
+
+
+
+
+# Create dir based on name and rip within it
+mkdir -p "$name"
+cd "$name"
+rip A
+cd ..
