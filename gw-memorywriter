@@ -22,7 +22,7 @@ img="$name.img"
 # Overloaded function from gw-raw
 function decode # 1-Nothing
 {
-	echo "Decoding Memorywriter 5.25in 3.5in Disk"
+	echo "Decoding Memorywriter 5.25in Disk"
 	gw convert --diskdefs $diskdefs --format xerox.memwrite "$raw" "$img"  2>&1 | tee -a $log_decode
 }
 
@@ -33,5 +33,5 @@ function decode # 1-Nothing
 # Create dir based on name and rip within it
 mkdir -p "$name"
 cd "$name"
-rip A
+rip B "c=0-39"
 cd ..
