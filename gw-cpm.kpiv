@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+
+# Format: 		Kaypro IV
+# gw diskdef: 		kaypro.iv
+# External tools:	cpmtools (https://github.com/lipro-cpm4l/cpmtools)
+
+# Get project name
+name="$1"
+
+# Include parent script
+if [[ -f "./gw-raw" ]]
+then
+	parent="./gw-raw"
+else
+	parent="$(which gw-raw)"
+fi
+source "$parent" "$name" "source"
+
+# Output file names
+img="$name.img"
+
+
+# Overloaded function from gw-raw
+function decode # 1-Nothing
+{
+	echo "Decoding Kaypro IV CP/M 2.2 disk"
+	gw convert --diskdefs $diskdefs --format kaypro.iv "$raw" "$img"  2>&1 | tee -a $log_decode
+}
+
+
+# Overloaded function from gw-raw
+function extract # 1-Nothing
+{
+	echo "Extract files from [$img] here as a verification step"
+	#file "$img"  2>&1 | tee -a $log_extract
+
+	format="kpii"
+	dest="$name-files"
+
+	# System dir creation
+	mkdir -p "$dest"
+
+	# Get files in copy
+	cpmls -f $format "$img" 2>&1 | tee -a $log_extract
+	cpmfiles=( $(cpmls -f $format "$img") )
+	if [[ "$(cpmls -f $format "$img" 2>&1 | grep "/")" != "" ]]
+	then
+		echo "CP/M files with '/' detected, replacing with '_'" 2>&1 | tee -a $log_extract
+	fi
+
+	# Extract each file from image
+	for line in "${cpmfiles[@]}"
+	do
+	    if [[ "$line" == "0:" ]]
+	    then
+		continue
+	    fi
+	    echo "Extracting: [$line]"
+	    cpmcp -f $format "$img" "0:$line" "$dest/$(echo "$line" | sed 's|/|_|')"
+
+	done
+}
+
+
+# Create dir based on name and rip within it
+mkdir -p "$name"
+cd "$name"
+rip B "h=0-1"
+cd ..
