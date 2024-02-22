@@ -35,12 +35,20 @@ function rip # 1-Drive 2-Tracks
 		drive=""
 	fi
 
+	# Check for doublestepping
+	if [[ "$DSTEP" = "1" ]]
+	then
+		step=":step=2"
+	else
+		step=""
+	fi
+
 	# Check for track information
 	# This is the full TSPEC that gw supports, over ripping tracks is 
 	# preferable, but you need to limit to 40 on a DD 360k drive.
 	if [[ "$2" != "" ]]
 	then
-		tracks="--tracks $2"
+		tracks="--tracks $2$step"
 	else
 		tracks=""
 	fi
