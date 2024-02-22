@@ -14,9 +14,16 @@ else
 fi
 source "$parent" "$name" "source"
 
+# Check for doublestepping
+if [[ "$DSTEP" = "1" ]]
+then
+	step=":step=2"
+else
+	step=""
+fi
 
 # Create dir based on name and rip within it
 mkdir -p "$name"
 cd "$name"
-rip B "c=0-39:h=0-1"
+rip B "c=0-39:h=0-1$step"
 cd ..
